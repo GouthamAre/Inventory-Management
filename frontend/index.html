@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventory Dashboard</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+  <!-- three.js + Vanta CLOUDS -->
+  <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+  
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Login overlay -->
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-card">
+      <h2>Welcome — Inventory</h2>
+      <form id="auth-form">
+        <input id="auth-username" placeholder="Username" required />
+        <input id="auth-password" type="password" placeholder="Password" required />
+        <div class="auth-actions">
+          <button id="auth-login" type="submit">Login</button>
+          <button id="auth-guest" type="button">Continue as Guest</button>
+        </div>
+        <div id="auth-msg" class="auth-msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">Inventory</div>
+      <nav>
+        <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="products">Products</button>
+        <button class="nav-btn" data-view="orders">Orders</button>
+        <button class="nav-btn" data-view="reports">Reports</button>
+      </nav>
+      <div class="sidebar-footer">
+        <small>Logged in as <span id="user-name">Guest</span></small>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <main class="main">
+      <!-- topbar -->
+      <header class="topbar">
+        <div id="vanta-bg" class="vanta-bg"></div>
+        <div class="topbar-content">
+          <h1>Inventory Dashboard</h1>
+          <div class="top-actions">
+            <input id="search" placeholder="Search products..." />
+            <button id="btn-refresh">Refresh</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- views -->
+      <section id="view-dashboard" class="view active">
+        <div class="cards">
+          <div class="card">
+            <h3>Total Products</h3>
+            <div class="card-value" id="total-products">0</div>
+          </div>
+          <div class="card">
+            <h3>Total Orders</h3>
+            <div class="card-value" id="total-orders">0</div>
+          </div>
+          <div class="card">
+            <h3>Low Stock</h3>
+            <div class="card-value" id="low-stock-count">0</div>
+          </div>
+          <div class="card">
+            <h3>Total Value</h3>
+            <div class="card-value" id="total-value">₹0.00</div>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <h4>Sales (Last 7 orders)</h4>
+            <canvas id="sales-chart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>Stock distribution</h4>
+            <canvas id="stock-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-products" class="view">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Products</h2>
+            <button id="btn-new">New Product</button>
+          </div>
+          <table id="products-table">
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Qty</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="view-orders" class="view">
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Orders</h2>
+      <button id="btn-new-order">New Order</button>
+    </div>
+    <div id="orders-list"></div>
+  </div>
+</section>
+
+<!-- Order Modal -->
+<div id="order-modal" class="modal hidden">
+  <div class="modal-content">
+    <h3>New Order</h3>
+    <form id="order-form">
+      <label>Select Product:</label>
+      <select id="order-product" required></select>
+      <label>Quantity:</label>
+      <input id="order-qty" type="number" min="1" required />
+      <div class="modal-actions">
+        <button type="submit">Place Order</button>
+        <button type="button" id="order-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+      <section id="view-reports" class="view">
+        <div class="panel">
+          <h2>Reports</h2>
+          <p>Simple CSV export and quick filters.</p>
+          <div class="reports-controls">
+            <button id="export-csv">Export Products CSV</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal for product -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modal-title">New Product</h3>
+      <form id="product-form">
+        <input name="name" placeholder="Name" required />
+        <input name="category" placeholder="Category" />
+        <input name="price" type="number" step="0.01" placeholder="Price" required />
+        <input name="quantity" type="number" placeholder="Quantity" required />
+        <div class="modal-actions">
+          <button type="submit">Save</button>
+          <button type="button" id="modal-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
